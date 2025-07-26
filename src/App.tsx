@@ -75,17 +75,15 @@ function App() {
     }
   ])
 
-  const [skills, setSkills] = useState<Skill[]>([
-    { id: '1', name: 'JavaScript', category: 'technical' },
-    { id: '2', name: 'React', category: 'technical' },
-    { id: '3', name: 'Node.js', category: 'technical' },
-    { id: '4', name: 'Python', category: 'technical' },
-    { id: '5', name: 'SQL', category: 'technical' },
-    { id: '6', name: 'Git', category: 'technical' },
-    { id: '7', name: 'Problem Solving', category: 'soft' },
-    { id: '8', name: 'Team Collaboration', category: 'soft' },
-    { id: '9', name: 'Communication', category: 'soft' }
-  ])
+  const [skills, setSkills] = useState({
+    programming: ['Java', 'Go', 'Python', 'JavaScript', 'C', 'C++'],
+    backend: ['Flask', 'Node.js', 'REST APIs', 'Kafka', 'SQS'],
+    databases: ['MySQL', 'SQLite', 'MongoDB', 'DynamoDB'],
+    cloudDevOps: ['AWS (EC2, S3)', 'Git', 'Docker (Basics)'],
+    csConcepts: ['Scalable Systems', 'Distributed Systems', 'Caching', 'Elasticache', 'Elasticsearch', 'Data Modeling', 'System Design'],
+    tools: ['Postman', 'VS Code', 'Jupyter Notebook'],
+    soft: ['Problem Solving', 'Communication', 'Team Collaboration', 'Eagerness to Learn']
+  })
 
   const [projects, setProjects] = useState<Project[]>([
     {
@@ -120,21 +118,27 @@ function App() {
     }
   ])
 
-  const addSkill = (category: 'technical' | 'soft') => {
-    const newSkill: Skill = {
-      id: Date.now().toString(),
-      name: '',
-      category
-    }
-    setSkills([...skills, newSkill])
+  const addSkill = (category: keyof typeof skills) => {
+    setSkills({
+      ...skills,
+      [category]: [...skills[category], '']
+    })
   }
 
-  const updateSkill = (id: string, name: string) => {
-    setSkills(skills.map(skill => skill.id === id ? { ...skill, name } : skill))
+  const updateSkill = (category: keyof typeof skills, index: number, value: string) => {
+    const updatedSkills = [...skills[category]]
+    updatedSkills[index] = value
+    setSkills({
+      ...skills,
+      [category]: updatedSkills
+    })
   }
 
-  const removeSkill = (id: string) => {
-    setSkills(skills.filter(skill => skill.id !== id))
+  const removeSkill = (category: keyof typeof skills, index: number) => {
+    setSkills({
+      ...skills,
+      [category]: skills[category].filter((_, i) => i !== index)
+    })
   }
 
   const addProject = () => {
@@ -161,9 +165,6 @@ function App() {
   const handleDownload = () => {
     window.print()
   }
-
-  const technicalSkills = skills.filter(skill => skill.category === 'technical')
-  const softSkills = skills.filter(skill => skill.category === 'soft')
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -316,30 +317,158 @@ function App() {
               <CardHeader>
                 <CardTitle>Skills</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
+                {/* Programming */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <Label>Technical Skills</Label>
-                    <Button size="sm" variant="outline" onClick={() => addSkill('technical')}>
+                    <Label>Programming</Label>
+                    <Button size="sm" variant="outline" onClick={() => addSkill('programming')}>
                       <Plus className="w-4 h-4 mr-1" />
                       Add
                     </Button>
                   </div>
                   <div className="space-y-2">
-                    {technicalSkills.map((skill) => (
-                      <div key={skill.id} className="flex items-center gap-2">
+                    {skills.programming.map((skill, index) => (
+                      <div key={index} className="flex items-center gap-2">
                         <Input
-                          value={skill.name}
-                          onChange={(e) => updateSkill(skill.id, e.target.value)}
-                          placeholder="Enter skill"
+                          value={skill}
+                          onChange={(e) => updateSkill('programming', index, e.target.value)}
+                          placeholder="Enter programming language"
                         />
-                        <Button size="sm" variant="ghost" onClick={() => removeSkill(skill.id)}>
+                        <Button size="sm" variant="ghost" onClick={() => removeSkill('programming', index)}>
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
                     ))}
                   </div>
                 </div>
+
+                {/* Backend */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>Backend</Label>
+                    <Button size="sm" variant="outline" onClick={() => addSkill('backend')}>
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {skills.backend.map((skill, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Input
+                          value={skill}
+                          onChange={(e) => updateSkill('backend', index, e.target.value)}
+                          placeholder="Enter backend technology"
+                        />
+                        <Button size="sm" variant="ghost" onClick={() => removeSkill('backend', index)}>
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Databases */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>Databases</Label>
+                    <Button size="sm" variant="outline" onClick={() => addSkill('databases')}>
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {skills.databases.map((skill, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Input
+                          value={skill}
+                          onChange={(e) => updateSkill('databases', index, e.target.value)}
+                          placeholder="Enter database"
+                        />
+                        <Button size="sm" variant="ghost" onClick={() => removeSkill('databases', index)}>
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Cloud & DevOps */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>Cloud & DevOps</Label>
+                    <Button size="sm" variant="outline" onClick={() => addSkill('cloudDevOps')}>
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {skills.cloudDevOps.map((skill, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Input
+                          value={skill}
+                          onChange={(e) => updateSkill('cloudDevOps', index, e.target.value)}
+                          placeholder="Enter cloud/DevOps tool"
+                        />
+                        <Button size="sm" variant="ghost" onClick={() => removeSkill('cloudDevOps', index)}>
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CS Concepts */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>CS Concepts</Label>
+                    <Button size="sm" variant="outline" onClick={() => addSkill('csConcepts')}>
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {skills.csConcepts.map((skill, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Input
+                          value={skill}
+                          onChange={(e) => updateSkill('csConcepts', index, e.target.value)}
+                          placeholder="Enter CS concept"
+                        />
+                        <Button size="sm" variant="ghost" onClick={() => removeSkill('csConcepts', index)}>
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tools */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>Tools</Label>
+                    <Button size="sm" variant="outline" onClick={() => addSkill('tools')}>
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {skills.tools.map((skill, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Input
+                          value={skill}
+                          onChange={(e) => updateSkill('tools', index, e.target.value)}
+                          placeholder="Enter tool"
+                        />
+                        <Button size="sm" variant="ghost" onClick={() => removeSkill('tools', index)}>
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Soft Skills */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <Label>Soft Skills</Label>
@@ -349,14 +478,14 @@ function App() {
                     </Button>
                   </div>
                   <div className="space-y-2">
-                    {softSkills.map((skill) => (
-                      <div key={skill.id} className="flex items-center gap-2">
+                    {skills.soft.map((skill, index) => (
+                      <div key={index} className="flex items-center gap-2">
                         <Input
-                          value={skill.name}
-                          onChange={(e) => updateSkill(skill.id, e.target.value)}
-                          placeholder="Enter skill"
+                          value={skill}
+                          onChange={(e) => updateSkill('soft', index, e.target.value)}
+                          placeholder="Enter soft skill"
                         />
-                        <Button size="sm" variant="ghost" onClick={() => removeSkill(skill.id)}>
+                        <Button size="sm" variant="ghost" onClick={() => removeSkill('soft', index)}>
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
@@ -471,17 +600,49 @@ function App() {
                     ))}
                   </div>
 
-                  {/* Technical Skills */}
-                  {technicalSkills.length > 0 && (
-                    <div className="mb-6">
-                      <h2 className="text-lg font-bold text-gray-900 mb-2 border-b border-gray-300 pb-1">
-                        TECHNICAL SKILLS
-                      </h2>
-                      <p className="text-gray-700">
-                        {technicalSkills.map(skill => skill.name).filter(name => name).join(' • ')}
-                      </p>
+                  {/* Skills */}
+                  <div className="mb-6">
+                    <h2 className="text-lg font-bold text-gray-900 mb-2 border-b border-gray-300 pb-1">
+                      SKILLS
+                    </h2>
+                    <div className="space-y-2">
+                      {skills.programming.length > 0 && (
+                        <p className="text-gray-700">
+                          <strong>• Programming:</strong> {skills.programming.filter(skill => skill).join(', ')}
+                        </p>
+                      )}
+                      {skills.backend.length > 0 && (
+                        <p className="text-gray-700">
+                          <strong>• Backend:</strong> {skills.backend.filter(skill => skill).join(', ')}
+                        </p>
+                      )}
+                      {skills.databases.length > 0 && (
+                        <p className="text-gray-700">
+                          <strong>• Databases:</strong> {skills.databases.filter(skill => skill).join(', ')}
+                        </p>
+                      )}
+                      {skills.cloudDevOps.length > 0 && (
+                        <p className="text-gray-700">
+                          <strong>• Cloud & DevOps:</strong> {skills.cloudDevOps.filter(skill => skill).join(', ')}
+                        </p>
+                      )}
+                      {skills.csConcepts.length > 0 && (
+                        <p className="text-gray-700">
+                          <strong>• CS Concepts:</strong> {skills.csConcepts.filter(skill => skill).join(', ')}
+                        </p>
+                      )}
+                      {skills.tools.length > 0 && (
+                        <p className="text-gray-700">
+                          <strong>• Tools:</strong> {skills.tools.filter(skill => skill).join(', ')}
+                        </p>
+                      )}
+                      {skills.soft.length > 0 && (
+                        <p className="text-gray-700">
+                          <strong>• Soft Skills:</strong> {skills.soft.filter(skill => skill).join(', ')}
+                        </p>
+                      )}
                     </div>
-                  )}
+                  </div>
 
                   {/* Projects */}
                   {projects.length > 0 && (
@@ -533,17 +694,7 @@ function App() {
                     </div>
                   )}
 
-                  {/* Soft Skills */}
-                  {softSkills.length > 0 && (
-                    <div className="mb-6">
-                      <h2 className="text-lg font-bold text-gray-900 mb-2 border-b border-gray-300 pb-1">
-                        ADDITIONAL SKILLS
-                      </h2>
-                      <p className="text-gray-700">
-                        {softSkills.map(skill => skill.name).filter(name => name).join(' • ')}
-                      </p>
-                    </div>
-                  )}
+
                 </div>
               </CardContent>
             </Card>
